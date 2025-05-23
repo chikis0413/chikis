@@ -15,7 +15,7 @@ def fetch_data():
     return []
 
 # Inicializar la app
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CERULEAN])
 app.title = "Cars Movies Dashboard"
 
 # Variable global para almacenar los datos de las películas
@@ -24,114 +24,181 @@ movie_data = fetch_data()
 # Layout
 app.layout = dbc.Container(
     fluid=True,
-    style={"width": "70%", "margin": "0 auto"},  # Página ocupa el 70% de la pantalla
+    style={
+        "backgroundColor": "#f8f9fa",  # Fondo blanco claro
+        "maxWidth": "1200px",
+        "margin": "0 auto",
+        "paddingTop": "20px",
+        "color": "black"  # Color de texto negro
+    },
     children=[
         # Título
         dbc.Row(
             dbc.Col(
                 html.Div(
-                    html.H1("Dashboard de Películas", className="display-3 text-center text-light"),
-                    style={'backgroundColor': '#343a40', 'padding': '40px', 'borderRadius': '10px'}
-                )
+                    [
+                        html.H1("Dashboard de Películas", className="display-3 text-center", style={'fontWeight': '300'}),
+                    ],
+                    style={
+                        'backgroundColor': '#343a40',  # Fondo gris oscuro
+                        'padding': '30px',
+                        'borderRadius': '15px',
+                        'boxShadow': '0px 4px 6px rgba(0, 0, 0, 0.1)',  # Sombra suave
+                        'marginBottom': '40px'  # Separación del título con otros elementos
+                    }
+                ),
+                width=12
             )
         ),
 
-        # Fila de botones de acción
+        # Fila de botones de acción con todos los botones en azul
         dbc.Row([
             dbc.Col(
-                dbc.Button("Agregar Película", id="add-movie-btn", color="primary", style={"width": "100%"}),
+                dbc.Button(
+                    children="Agregar Película", 
+                    id="add-movie-btn", 
+                    color="primary", 
+                    size="lg", 
+                    style={"width": "100%", 'fontWeight': '600'}
+                ),
                 width=12, md=3
             ),
             dbc.Col(
-                dbc.Button("Actualizar Películas", id="update-movie-btn", color="secondary", style={"width": "100%"}),
+                dbc.Button(
+                    children="Actualizar", 
+                    id="update-movie-btn", 
+                    color="primary", 
+                    size="lg", 
+                    style={"width": "100%", 'fontWeight': '600'}
+                ),
                 width=12, md=3
             ),
             dbc.Col(
-                dbc.Button("Eliminar Película", id="delete-movie-btn", color="danger", style={"width": "100%"}),
+                dbc.Button(
+                    children="Eliminar", 
+                    id="delete-movie-btn", 
+                    color="primary", 
+                    size="lg", 
+                    style={"width": "100%", 'fontWeight': '600'}
+                ),
                 width=12, md=3
             ),
             dbc.Col(
-                dbc.Button("Ver Listado", id="view-movie-btn", color="info", style={"width": "100%"}),
+                dbc.Button(
+                    children="Ver Listado", 
+                    id="view-movie-btn", 
+                    color="primary", 
+                    size="lg", 
+                    style={"width": "100%", 'fontWeight': '600'}
+                ),
                 width=12, md=3
             ),
-        ], className="mb-4"),
+        ], className="mb-4", style={'marginBottom': '40px'}),  # Mayor separación entre los botones y la tabla
 
-        # Tabla de películas
+        # Fila del buscador
         dbc.Row(
             dbc.Col(
-                dash_table.DataTable(
-                    id='movies-table',
-                    columns=[
-                        {"name": "ID", "id": "id"},
-                        {"name": "Nombre", "id": "carMovieName"},
-                        {"name": "Año", "id": "carMovieYear"},
-                        {"name": "Duración (min)", "id": "duration"}
-                    ],
-                    data=movie_data,
-                    editable=True,
-                    row_deletable=True,
-                    style_table={'overflowX': 'auto', 'borderRadius': '10px', 'boxShadow': '0px 4px 6px rgba(0,0,0,0.1)'},
-                    style_cell={'textAlign': 'left', 'padding': '8px', 'fontSize': '16px', 'fontFamily': 'Arial, sans-serif'},
-                    style_header={'backgroundColor': '#007bff', 'color': 'white', 'fontWeight': 'bold'},
-                    page_size=5,
-                    style_data_conditional=[
-                        {'if': {'row_index': 'odd'}, 'backgroundColor': '#f8f9fa'}
-                    ]
-                )
+                dcc.Input(
+                    id="search-input", 
+                    type="text", 
+                    placeholder="Buscar película por nombre...", 
+                    style={"width": "100%", "padding": "10px", "fontSize": "18px", "borderRadius": "5px"}
+                ),
+                width=12
+            ),
+            style={"marginBottom": "30px"}  # Separación del buscador de la tabla
+        ),
+
+        # Card para contener la tabla de películas
+        dbc.Row(
+            dbc.Col(
+                dbc.Card(
+                    dbc.CardBody([
+                        html.H4("Listado de Películas", className="card-title", style={'fontSize': '22px', 'fontWeight': 'bold'}),
+                        dash_table.DataTable(
+                            id='movies-table',
+                            columns=[
+                                {"name": "ID", "id": "id"},
+                                {"name": "Nombre", "id": "carMovieName"},
+                                {"name": "Año", "id": "carMovieYear"},
+                                {"name": "Duración (min)", "id": "duration"}
+                            ],
+                            data=movie_data,
+                            editable=True,
+                            row_deletable=True,
+                            style_table={
+                                'overflowX': 'auto',
+                                'borderRadius': '10px',
+                                'boxShadow': '0px 4px 10px rgba(0, 0, 0, 0.2)',  # Sombra suave
+                                'backgroundColor': '#FFFFFF',  # Fondo blanco para la tabla
+                                'marginTop': '20px',  # Separación superior de la tabla
+                            },
+                            style_cell={
+                                'textAlign': 'left',
+                                'padding': '12px',
+                                'fontSize': '16px',
+                                'fontFamily': 'Arial, sans-serif',
+                                'color': '#000000'  # Texto negro para la tabla
+                            },
+                            style_header={
+                                'backgroundColor': '#007bff',  # Azul para los encabezados
+                                'color': 'white',
+                                'fontWeight': 'bold',
+                                'textAlign': 'center',
+                                'borderTopLeftRadius': '10px',
+                                'borderTopRightRadius': '10px'
+                            },
+                            page_size=5,
+                            style_data_conditional=[
+                                {'if': {'row_index': 'odd'}, 'backgroundColor': '#f1f1f1'},  # Fondo gris claro para filas impares
+                                {'if': {'state': 'selected'}, 'backgroundColor': '#4e73df'}  # Resaltado al seleccionar
+                            ]
+                        )
+                    ])
+                ),
+                width=12
             )
         )
     ]
 )
 
-# Callback para agregar una película
+# Callback para manejar todas las interacciones con los botones
 @app.callback(
     Output('movies-table', 'data'),
     Input('add-movie-btn', 'n_clicks'),
-    State('movies-table', 'data'),
-    prevent_initial_call=True
-)
-def add_movie(n_clicks, current_data):
-    if not n_clicks:
-        raise PreventUpdate
-    # Agregar una película al listado (con datos de ejemplo)
-    new_movie = {
-        'id': len(current_data) + 1,
-        'carMovieName': "Nueva Película",
-        'carMovieYear': 2025,
-        'duration': 120
-    }
-    current_data.append(new_movie)
-    return current_data
-
-# Callback para actualizar la tabla con los datos más recientes
-@app.callback(
-    Output('movies-table', 'data'),
     Input('update-movie-btn', 'n_clicks'),
-    prevent_initial_call=True
-)
-def update_movie_list(n_clicks):
-    global movie_data
-    if not n_clicks:
-        raise PreventUpdate
-    movie_data = fetch_data()  # Actualiza con los datos de la API
-    return movie_data
-
-# Callback para eliminar una película
-@app.callback(
-    Output('movies-table', 'data'),
     Input('delete-movie-btn', 'n_clicks'),
-    State('movies-table', 'selected_rows'),
+    Input('search-input', 'value'),
     State('movies-table', 'data'),
+    State('movies-table', 'selected_rows'),
     prevent_initial_call=True
 )
-def delete_movie(n_clicks, selected_rows, current_data):
-    if not n_clicks or not selected_rows:
-        raise PreventUpdate
-    selected_ids = [current_data[i]['id'] for i in selected_rows]
-    updated_data = [movie for movie in current_data if movie['id'] not in selected_ids]
-    return updated_data
+def update_table(add_clicks, update_clicks, delete_clicks, search_value, current_data, selected_rows):
+    # Agregar película
+    if add_clicks:
+        new_movie = {
+            'id': len(current_data) + 1,
+            'carMovieName': "Nueva Película",
+            'carMovieYear': 2025,
+            'duration': 120
+        }
+        current_data.append(new_movie)
 
+    # Actualizar película
+    if update_clicks:
+        current_data = fetch_data()
+
+    # Eliminar película
+    if delete_clicks and selected_rows:
+        selected_ids = [current_data[i]['id'] for i in selected_rows]
+        current_data = [movie for movie in current_data if movie['id'] not in selected_ids]
+
+    # Buscar película
+    if search_value:
+        current_data = [movie for movie in current_data if search_value.lower() in movie['carMovieName'].lower()]
+
+    return current_data
 
 # Ejecutar el servidor
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",debug=True)
+    app.run(host="0.0.0.0", debug=True)
